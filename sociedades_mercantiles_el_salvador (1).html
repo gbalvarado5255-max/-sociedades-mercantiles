@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  min-height: 100vh;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+h1 {
+  text-align: center;
+  color: #1f4e78;
+  font-size: 28px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.subtitle {
+  text-align: center;
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.tab {
+  padding: 12px 24px;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  color: #333;
+}
+.tab:hover {
+  background: #e0e0e0;
+  transform: translateY(-2px);
+}
+.tab.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+.content {
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+.content.active {
+  display: block;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.card {
+  background: linear-gradient(to right, #f8f9fa, white);
+  border-left: 5px solid;
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: translateX(5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+.card.sociedad-colectiva { border-left-color: #70AD47; }
+.card.sociedad-comandita-simple { border-left-color: #ED7D31; }
+.card.sociedad-responsabilidad { border-left-color: #4472C4; }
+.card.sociedad-anonima { border-left-color: #9C27B0; }
+.card.sociedad-comandita-acciones { border-left-color: #E91E63; }
+.card-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+.card-section {
+  margin-bottom: 15px;
+}
+.card-section h3 {
+  font-size: 14px;
+  color: #7f8c8d;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.card-section p, .card-section ul {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #555;
+}
+.card-section ul {
+  padding-left: 20px;
+}
+.card-section li {
+  margin-bottom: 5px;
+}
+.highlight {
+  background: #fff3cd;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.tabla-comparativa {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  overflow-x: auto;
+  display: block;
+}
+.tabla-comparativa table {
+  width: 100%;
+  min-width: 800px;
+}
+.tabla-comparativa th {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #ddd;
+}
+.tabla-comparativa td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  font-size: 13px;
+  vertical-align: top;
+}
+.tabla-comparativa tr:nth-child(even) {
+  background: #f8f9fa;
+}
+.tabla-comparativa tr:hover {
+  background: #e3f2fd;
+}
+.ventaja {
+  color: #27ae60;
+  font-weight: 500;
+}
+.desventaja {
+  color: #e74c3c;
+  font-weight: 500;
+}
+.info-box {
+  background: #e3f2fd;
+  border-left: 4px solid #2196f3;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+.info-box h3 {
+  color: #1976d2;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+.info-box p {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.footer {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid #eee;
+  color: #999;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🏢 Sociedades Mercantiles en El Salvador</h1>
+<p class="subtitle">Código de Comercio - Análisis Comparativo Interactivo</p>
+
+<div class="tabs">
+<button class="tab active" onclick="showContent('todas')">📊 Comparativa General</button>
+<button class="tab" onclick="showContent('colectiva')">Sociedad Colectiva</button>
+<button class="tab" onclick="showContent('comandita-simple')">Comandita Simple</button>
+<button class="tab" onclick="showContent('responsabilidad')">S. de R.L.</button>
+<button class="tab" onclick="showContent('anonima')">S.A.</button>
+<button class="tab" onclick="showContent('comandita-acciones')">Comandita por Acciones</button>
+</div>
+
+<!-- CONTENIDO: COMPARATIVA GENERAL -->
+<div id="todas" class="content active">
+<div class="info-box">
+<h3>📖 Artículo 17 del Código de Comercio de El Salvador</h3>
+<p>El Código de Comercio establece cinco tipos de sociedades mercantiles, cada una con características, ventajas y desventajas específicas según las necesidades empresariales.</p>
+</div>
+
+<div class="tabla-comparativa">
+<table>
+<thead>
+<tr>
+<th>Tipo de Sociedad</th>
+<th>Capital Social</th>
+<th>Responsabilidad</th>
+<th>N° Socios Mínimo</th>
+<th>Ideal Para</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sociedad Colectiva</strong></td>
+<td>No hay mínimo legal</td>
+<td>Ilimitada, solidaria y subsidiaria</td>
+<td>2 socios</td>
+<td>Negocios familiares pequeños</td>
+</tr>
+<tr>
+<td><strong>Sociedad en Comandita Simple</strong></td>
+<td>No hay mínimo legal</td>
+<td>Comanditados: ilimitada<br>Comanditarios: limitada</td>
+<td>2 socios (1 comanditado + 1 comanditario)</td>
+<td>Inversionistas pasivos y activos</td>
+</tr>
+<tr>
+<td><strong>Sociedad de Responsabilidad Limitada</strong></td>
+<td>Mínimo $2,000</td>
+<td>Limitada al capital aportado</td>
+<td>2 a 25 socios</td>
+<td>PYMEs y negocios medianos</td>
+</tr>
+<tr>
+<td><strong>Sociedad Anónima</strong></td>
+<td>Mínimo $2,000</td>
+<td>Limitada a las acciones</td>
+<td>2 accionistas</td>
+<td>Grandes empresas, empresas que buscan inversión</td>
+</tr>
+<tr>
+<td><strong>Sociedad en Comandita por Acciones</strong></td>
+<td>Mínimo $2,000</td>
+<td>Comanditados: ilimitada<br>Comanditarios: limitada</td>
+<td>2 socios</td>
+<td>Combinación de control y capital externo</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h2 style="margin-top: 30px; color: #2c3e50; font-size: 20px;">⚖️ Ventajas y Desventajas Generales</h2>
+
+<div class="tabla-comparativa">
+<table>
+<thead>
+<tr>
+<th>Sociedad</th>
+<th>Ventajas ✅</th>
+<th>Desventajas ❌</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Colectiva</strong></td>
+<td class="ventaja">• Fácil constitución<br>• Sin capital mínimo<br>• Confianza entre socios</td>
+<td class="desventaja">• Responsabilidad ilimitada<br>• Riesgo personal alto<br>• Difícil captar inversión</td>
+</tr>
+<tr>
+<td><strong>Comandita Simple</strong></td>
+<td class="ventaja">• Permite inversionistas pasivos<br>• Flexibilidad en administración</td>
+<td class="desventaja">• Comanditados con responsabilidad ilimitada<br>• Compleja gestión dual</td>
+</tr>
+<tr>
+<td><strong>S. de R.L.</strong></td>
+<td class="ventaja">• Responsabilidad limitada<br>• Control cerrado<br>• Ideal para PYMEs</td>
+<td class="desventaja">• Máximo 25 socios<br>• Transferencia de cuotas restringida<br>• Menos atractiva para grandes inversores</td>
+</tr>
+<tr>
+<td><strong>S.A.</strong></td>
+<td class="ventaja">• Responsabilidad limitada<br>• Fácil transferencia de acciones<br>• Acceso a bolsa de valores<br>• Sin límite de accionistas</td>
+<td class="desventaja">• Mayor regulación<br>• Costos administrativos altos<br>• Obligaciones de transparencia</td>
+</tr>
+<tr>
+<td><strong>Comandita por Acciones</strong></td>
+<td class="ventaja">• Combina control (comanditados) con capital (accionistas)<br>• Responsabilidad limitada para comanditarios</td>
+<td class="desventaja">• Comanditados con responsabilidad ilimitada<br>• Estructura compleja<br>• Poco común en la práctica</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- SOCIEDAD COLECTIVA -->
+<div id="colectiva" class="content">
+<div class="card sociedad-colectiva">
+<div class="card-title">🤝 SOCIEDAD COLECTIVA</div>
+
+<div class="card-section">
+<h3>📋 Definición</h3>
+<p>Es aquella que existe bajo una <span class="highlight">razón social</span> y en la cual todos los socios responden de modo <span class="highlight">subsidiario, ilimitado y solidario</span> de las obligaciones sociales.</p>
+</div>
+
+<div class="card-section">
+<h3>👥 Características Principales</h3>
+<ul>
+<li><strong>Razón Social:</strong> Se forma con el nombre de uno o más socios + "y Compañía" o "y Cía."</li>
+<li><strong>Número de socios:</strong> Mínimo 2 personas</li>
+<li><strong>Capital social:</strong> No hay mínimo legal establecido</li>
+<li><strong>Responsabilidad:</strong> Todos los socios responden con su patrimonio personal</li>
+<li><strong>Administración:</strong> Puede ser ejercida por uno o varios socios</li>
+<li><strong>Carácter:</strong> Sociedad de personas (intuitu personae)</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>⚖️ Responsabilidad de los Socios</h3>
+<ul>
+<li><strong>Ilimitada:</strong> Los socios responden con todo su patrimonio personal</li>
+<li><strong>Solidaria:</strong> Cada socio puede ser demandado por la totalidad de la deuda</li>
+<li><strong>Subsidiaria:</strong> Primero se ejecutan los bienes de la sociedad, luego los personales</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>✅ Ventajas</h3>
+<ul>
+<li>Constitución sencilla y menos costosa</li>
+<li>No requiere capital mínimo</li>
+<li>Genera confianza en terceros (responsabilidad ilimitada)</li>
+<li>Menos formalidades administrativas</li>
+<li>Ideal para negocios familiares pequeños</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>❌ Desventajas</h3>
+<ul>
+<li>Alto riesgo personal para los socios</li>
+<li>Dificulta la captación de nuevos socios</li>
+<li>Patrimonio personal en riesgo constante</li>
+<li>No es atractiva para inversionistas externos</li>
+<li>Disolución por muerte, retiro o quiebra de un socio</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>🎯 Ideal Para</h3>
+<p>Negocios familiares, pequeñas empresas donde hay alta confianza entre socios y el riesgo empresarial es bajo.</p>
+</div>
+
+<div class="card-section">
+<h3>📜 Base Legal</h3>
+<p>Artículos 59 al 96 del Código de Comercio de El Salvador</p>
+</div>
+</div>
+</div>
+
+<!-- COMANDITA SIMPLE -->
+<div id="comandita-simple" class="content">
+<div class="card sociedad-comandita-simple">
+<div class="card-title">⚡ SOCIEDAD EN COMANDITA SIMPLE</div>
+
+<div class="card-section">
+<h3>📋 Definición</h3>
+<p>Es la que existe bajo una <span class="highlight">razón social</span> y se compone de uno o varios socios <span class="highlight">comanditados</span> que responden de manera subsidiaria, ilimitada y solidaria, y de uno o varios socios <span class="highlight">comanditarios</span> que tienen responsabilidad limitada.</p>
+</div>
+
+<div class="card-section">
+<h3>👥 Dos Tipos de Socios</h3>
+<p><strong>1. Socios Comanditados:</strong></p>
+<ul>
+<li>Administran la sociedad</li>
+<li>Responsabilidad ilimitada, solidaria y subsidiaria</li>
+<li>Su nombre aparece en la razón social</li>
+<li>Aportan capital y trabajo</li>
+</ul>
+<p style="margin-top: 10px;"><strong>2. Socios Comanditarios:</strong></p>
+<ul>
+<li>Son inversionistas pasivos</li>
+<li>Responsabilidad limitada a su aporte</li>
+<li>No administran ni representan a la sociedad</li>
+<li>Solo aportan capital</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>📝 Características Principales</h3>
+<ul>
+<li><strong>Razón Social:</strong> Nombre de comanditados + "y Compañía Limitada" o "y Cía. Ltda."</li>
+<li><strong>Capital:</strong> No hay mínimo legal</li>
+<li><strong>Número mínimo:</strong> 2 socios (al menos 1 comanditado y 1 comanditario)</li>
+<li><strong>Administración:</strong> Solo por socios comanditados</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>✅ Ventajas</h3>
+<ul>
+<li>Permite captar inversionistas sin darles control (comanditarios)</li>
+<li>Flexibilidad en la estructura de capital</li>
+<li>Los comanditarios solo arriesgan su aporte</li>
+<li>Comanditados mantienen el control total</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>❌ Desventajas</h3>
+<ul>
+<li>Comanditados tienen responsabilidad ilimitada</li>
+<li>Estructura dual complica la administración</li>
+<li>Poco utilizada en la práctica</li>
+<li>Conflictos potenciales entre tipos de socios</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>🎯 Ideal Para</h3>
+<p>Negocios donde algunos socios quieren administrar activamente (comanditados) y otros solo invertir sin participar en la gestión (comanditarios).</p>
+</div>
+
+<div class="card-section">
+<h3>📜 Base Legal</h3>
+<p>Artículos 97 al 109 del Código de Comercio de El Salvador</p>
+</div>
+</div>
+</div>
+
+<!-- SOCIEDAD DE RESPONSABILIDAD LIMITADA -->
+<div id="responsabilidad" class="content">
+<div class="card sociedad-responsabilidad">
+<div class="card-title">🛡️ SOCIEDAD DE RESPONSABILIDAD LIMITADA (S. DE R.L.)</div>
+
+<div class="card-section">
+<h3>📋 Definición</h3>
+<p>Es la que existe bajo una <span class="highlight">razón social o denominación</span> y en la cual la responsabilidad de cada socio está <span class="highlight">limitada al monto de su aportación</span>.</p>
+</div>
+
+<div class="card-section">
+<h3>📝 Características Principales</h3>
+<ul>
+<li><strong>Denominación:</strong> Nombre + "Sociedad de Responsabilidad Limitada" o "S. de R.L."</li>
+<li><strong>Capital social mínimo:</strong> $2,000 (dos mil dólares)</li>
+<li><strong>Número de socios:</strong> Mínimo 2, máximo 25</li>
+<li><strong>Aportaciones:</strong> Divididas en cuotas sociales (no acciones)</li>
+<li><strong>Responsabilidad:</strong> Limitada al capital aportado</li>
+<li><strong>Transferencia:</strong> Las cuotas no son libremente transferibles (requieren consentimiento)</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>💼 Capital Social</h3>
+<ul>
+<li>Debe estar íntegramente suscrito</li>
+<li>Al menos el 50% debe estar pagado al constituirse</li>
+<li>El resto debe pagarse en el plazo establecido en escritura</li>
+<li>Las cuotas pueden ser de distinto valor</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>👥 Órganos de Administración</h3>
+<ul>
+<li><strong>Junta General de Socios:</strong> Máximo órgano de decisión</li>
+<li><strong>Administrador(es):</strong> Pueden ser socios o no</li>
+<li>Puede haber un consejo de administración</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>✅ Ventajas</h3>
+<ul>
+<li>Responsabilidad limitada protege patrimonio personal</li>
+<li>Número controlado de socios (máx. 25)</li>
+<li>Ideal para PYMEs y negocios familiares medianos</li>
+<li>Control cerrado sobre quién entra como socio</li>
+<li>Menos formalidades que una S.A.</li>
+<li>Capital mínimo accesible ($2,000)</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>❌ Desventajas</h3>
+<ul>
+<li>Limitación de 25 socios máximo</li>
+<li>Las cuotas no se pueden vender libremente</li>
+<li>Difícil captar grandes inversiones</li>
+<li>No puede cotizar en bolsa de valores</li>
+<li>Menor atractivo para inversionistas externos</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>🎯 Ideal Para</h3>
+<p>Pequeñas y medianas empresas (PYMEs), negocios familiares que quieren proteger su patrimonio personal sin la complejidad de una S.A.</p>
+</div>
+
+<div class="card-section">
+<h3>📜 Base Legal</h3>
+<p>Artículos 110 al 134 del Código de Comercio de El Salvador</p>
+</div>
+</div>
+</div>
+
+<!-- SOCIEDAD ANÓNIMA -->
+<div id="anonima" class="content">
+<div class="card sociedad-anonima">
+<div class="card-title">📈 SOCIEDAD ANÓNIMA (S.A.)</div>
+
+<div class="card-section">
+<h3>📋 Definición</h3>
+<p>Es la que existe bajo una <span class="highlight">denominación</span> y se compone exclusivamente de socios cuya obligación se limita al pago de sus <span class="highlight">acciones</span>.</p>
+</div>
+
+<div class="card-section">
+<h3>📝 Características Principales</h3>
+<ul>
+<li><strong>Denominación:</strong> Nombre + "Sociedad Anónima" o "S.A."</li>
+<li><strong>Capital social mínimo:</strong> $2,000 dividido en acciones</li>
+<li><strong>Número de accionistas:</strong> Mínimo 2, sin máximo</li>
+<li><strong>Responsabilidad:</strong> Limitada al valor de las acciones suscritas</li>
+<li><strong>Transferencia:</strong> Acciones libremente transferibles (salvo restricciones estatutarias)</li>
+<li><strong>Capital:</strong> Representado por acciones nominativas o al portador</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>💼 Capital Social</h3>
+<ul>
+<li>Dividido en acciones de igual valor</li>
+<li>Debe estar íntegramente suscrito</li>
+<li>Al menos 5% debe pagarse en efectivo al constituirse</li>
+<li>Puede aumentarse mediante emisión de nuevas acciones</li>
+<li>Puede cotizar en bolsa de valores</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>🏛️ Órganos Principales</h3>
+<p><strong>1. Asamblea General de Accionistas:</strong></p>
+<ul>
+<li>Órgano supremo</li>
+<li>Ordinaria: una vez al año mínimo</li>
+<li>Extraordinaria: cuando sea necesario</li>
+</ul>
+<p style="margin-top: 10px;"><strong>2. Junta Directiva:</strong></p>
+<ul>
+<li>Mínimo 3 directores</li>
+<li>Administra la sociedad</li>
+<li>Puede delegar funciones en gerentes</li>
+</ul>
+<p style="margin-top: 10px;"><strong>3. Fiscal o Auditor:</strong></p>
+<ul>
+<li>Vigila las operaciones</li>
+<li>Puede ser persona natural o firma auditora</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>✅ Ventajas</h3>
+<ul>
+<li>Responsabilidad limitada de los accionistas</li>
+<li>Acciones libremente transferibles</li>
+<li>Puede captar grandes inversiones</li>
+<li>Puede cotizar en bolsa de valores</li>
+<li>Sin límite en número de accionistas</li>
+<li>Continuidad asegurada (no se disuelve por muerte de accionistas)</li>
+<li>Estructura profesional y transparente</li>
+<li>Mayor credibilidad ante bancos e instituciones</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>❌ Desventajas</h3>
+<ul>
+<li>Mayor regulación y supervisión</li>
+<li>Costos administrativos más altos</li>
+<li>Obligaciones de transparencia y reportes</li>
+<li>Proceso de constitución más complejo</li>
+<li>Requiere llevar libros legales obligatorios</li>
+<li>Posible pérdida de control por nuevos accionistas</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>🎯 Ideal Para</h3>
+<p>Grandes empresas, negocios que buscan crecer mediante inversión externa, empresas que planean cotizar en bolsa, proyectos que requieren mucho capital.</p>
+</div>
+
+<div class="card-section">
+<h3>📜 Base Legal</h3>
+<p>Artículos 135 al 280 del Código de Comercio de El Salvador</p>
+</div>
+</div>
+</div>
+
+<!-- COMANDITA POR ACCIONES -->
+<div id="comandita-acciones" class="content">
+<div class="card sociedad-comandita-acciones">
+<div class="card-title">🎭 SOCIEDAD EN COMANDITA POR ACCIONES</div>
+
+<div class="card-section">
+<h3>📋 Definición</h3>
+<p>Es la que se compone de uno o varios socios <span class="highlight">comanditados</span> que responden de manera subsidiaria, ilimitada y solidaria de las obligaciones sociales, y de uno o varios socios <span class="highlight">comanditarios</span> que tienen la calidad de accionistas.</p>
+</div>
+
+<div class="card-section">
+<h3>📝 Características Principales</h3>
+<ul>
+<li><strong>Denominación:</strong> Nombre de comanditados + "y Compañía Sociedad en Comandita por Acciones" o "y Cía. S.C.A."</li>
+<li><strong>Capital mínimo:</strong> $2,000</li>
+<li><strong>Estructura híbrida:</strong> Combina elementos de comandita simple y S.A.</li>
+<li><strong>Capital:</strong> Dividido en acciones</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>👥 Dos Tipos de Socios</h3>
+<p><strong>1. Socios Comanditados:</strong></p>
+<ul>
+<li>Administran la sociedad</li>
+<li>Responsabilidad ilimitada, solidaria y subsidiaria</li>
+<li>No pueden ser sustituidos sin consentimiento de todos</li>
+<li>Mínimo 1 comanditado</li>
+</ul>
+<p style="margin-top: 10px;"><strong>2. Socios Comanditarios (Accionistas):</strong></p>
+<ul>
+<li>Tienen acciones</li>
+<li>Responsabilidad limitada al valor de sus acciones</li>
+<li>No administran la sociedad</li>
+<li>Participan en asambleas de accionistas</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>🏛️ Órganos Sociales</h3>
+<ul>
+<li><strong>Asamblea General de Accionistas:</strong> Comanditarios participan</li>
+<li><strong>Administradores:</strong> Solo pueden ser comanditados</li>
+<li><strong>Fiscal:</strong> Obligatorio si hay más de 10 accionistas comanditarios</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>✅ Ventajas</h3>
+<ul>
+<li>Comanditados mantienen control total de la administración</li>
+<li>Permite captar capital mediante acciones</li>
+<li>Comanditarios tienen responsabilidad limitada</li>
+<li>Combina control gerencial con financiamiento externo</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>❌ Desventajas</h3>
+<ul>
+<li>Comanditados asumen responsabilidad ilimitada</li>
+<li>Estructura muy compleja</li>
+<li>Poco utilizada en la práctica</li>
+<li>Puede generar conflictos entre comanditados y comanditarios</li>
+<li>Difícil encontrar personas dispuestas a ser comanditados</li>
+</ul>
+</div>
+
+<div class="card-section">
+<h3>🎯 Ideal Para</h3>
+<p>Empresas donde los fundadores quieren mantener control absoluto de la gestión pero necesitan capital externo sin ceder poder de decisión. Poco común en El Salvador.</p>
+</div>
+
+<div class="card-section">
+<h3>📜 Base Legal</h3>
+<p>Artículos 281 al 295 del Código de Comercio de El Salvador</p>
+</div>
+</div>
+</div>
+
+<div class="footer">
+<p><strong>Fuente:</strong> Código de Comercio de El Salvador (Decreto Legislativo No. 671 del 8 de mayo de 1970)</p>
+<p>Elaborado para: Derecho Mercantil - UTEC 2026</p>
+</div>
+
+</div>
+
+<script>
+function showContent(id) {
+  // Ocultar todos los contenidos
+  const contents = document.querySelectorAll('.content');
+  contents.forEach(content => content.classList.remove('active'));
+  
+  // Desactivar todas las pestañas
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(tab => tab.classList.remove('active'));
+  
+  // Mostrar el contenido seleccionado
+  document.getElementById(id).classList.add('active');
+  
+  // Activar la pestaña correspondiente
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
